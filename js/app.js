@@ -203,7 +203,34 @@ importItemBtn.addEventListener("click", () => {
     renderItems();
 });
 
-// แสดงผลรายการพร้อมปุ่มลบ
+// If Download .json
+function downloadJSON(data, filename) {
+    const jsonString = JSON.stringify(data, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
+// Copy JSON ลง Clipboard
+function copyJSONToClipboard(data, successMessage) {
+    const jsonString = JSON.stringify(data, null, 2);
+    navigator.clipboard.writeText(jsonString)
+        .then(() => {
+            alert(successMessage);
+        })
+        .catch(() => {
+            alert("Unable. Check browser clipboard");
+        });
+}
+
+// Copy Export Delete
 function renderItems() {
     const selectedPortfolio = portfolioSelect.value;
     const allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
@@ -217,9 +244,13 @@ function renderItems() {
         itemDiv.style.padding = "10px";
         itemDiv.style.marginBottom = "10px";
         itemDiv.innerHTML = `
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-            <h3>[${escapeHTML(item.id)}] ${escapeHTML(item.title)} (${escapeHTML(item.type)})</h3>
-            <button type="button" class="delete-item-btn" data-index="${index}" style="color: red;">Delete</button>
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+                <h3 style="margin: 0;">[${escapeHTML(item.id)}] ${escapeHTML(item.title)} (${escapeHTML(item.type)})</h3>
+                <div style="display: flex; gap: 6px;">
+                    <button type="button" class="copy-item-btn btn btn-outline-secondary btn-sm" data-index="${index}">Copy JSON</button>
+                    <button type="button" class="export-item-btn btn btn-outline-dark btn-sm" data-index="${index}">Export .json</button>
+                    <button type="button" class="delete-item-btn" data-index="${index}" style="color: red;">ลบ</button>
+                </div>
             </div>
             <p><strong>Date:</strong> ${escapeHTML(item.date)} | <strong>Role:</strong> ${escapeHTML(item.role)}</p>
             <p><strong>Description:</strong> ${escapeHTML(item.description)}</p>
@@ -238,7 +269,30 @@ function renderItems() {
         itemsContainer.appendChild(itemDiv);
     });
 
-    // สั่งให้ปุ่มลบ Item แต่ละรายการ
+    // Copy .json เฉพาะ Item
+    document.querySelectorAll(".copy-item-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const itemIndex = e.target.getAttribute("data-index");
+            const itemData = items[itemIndex];
+            if (itemData) {
+                copyJSONToClipboard(itemData, `คัดลอก "${itemData.title}".json เรียบร้อย!`);
+            }
+        });
+    });
+
+    // Export .json เฉพาะ Item
+    document.querySelectorAll(".export-item-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            const itemIndex = e.target.getAttribute("data-index");
+            const itemData = items[itemIndex];
+            if (itemData) {
+                const safeFilename = `${itemData.id || "portfolio-item"}.json`;
+                downloadJSON(itemData, safeFilename);
+            }
+        });
+    });
+
+    // Delete Item button
     document.querySelectorAll(".delete-item-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
             const itemIndex = e.target.getAttribute("data-index");
@@ -252,7 +306,7 @@ function deleteItem(index) {
     const selectedPortfolio = portfolioSelect.value;
     let allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
 
-        if (allPortfolios[selectedPortfolio] && confirm("คุณจะลบผลงานนี้ใช่หรือไม่?")) {
+        if (allPortfolios[selectedPortfolio] && confirm("คุณจะลบงานนี้ใช่หรือไม่?")) {
             allPortfolios[selectedPortfolio].items.splice(index, 1);
             localStorage.setItem("portfoliosData", JSON.stringify(allPortfolios));
             renderItems();
