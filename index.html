@@ -142,6 +142,22 @@
             <div id="items-container" class="row g-3">
                 <!-- ข้อมูลจะโดนดึงมาตรงนี่นาจา -->
             </div>
+
+
+            <!-- import -->
+            <div class="card-body p-4">
+                <h2 class="section-title"><i class="bi bi-box-arrow-in-down"></i> Import Portfolio Item (JSON)</h2>
+                <div class="mb-3">
+                    <label for="import-item-json" class="form-label">วางโค้ด JSON ของ Portfolio Item ที่จะ Import </label>
+                    <textarea id="import-item-json" class="form-control" rows="4" placeholder='{"id": "itemNum", "title": "PlaceHolder", ...}'></textarea>
+                </div>
+                <div class="d-flex justify-content-end">
+                    <button type="button" id="import-item-btn" class="btn btn-brand">
+                        <i class="bi bi-download"></i> Import
+                    </button>
+                </div>
+            </div>
+
         </section>
 
     </main>

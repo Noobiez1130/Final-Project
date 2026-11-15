@@ -5,6 +5,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const newPortfolioInput = document.querySelector("#new-portfolio-name");
     const addPortfolioBtn = document.querySelector("#add-portfolio-btn");
     const deletePortfolioBtn = document.querySelector("#delete-portfolio-btn");
+    const importJsonInput = document.querySelector("#import-item-json");
+    const importItemBtn = document.querySelector("#import-item-btn");
+
 
 // โหลดรายชื่อมาใส่ใน <select>
 loadPortfolioOptions();
@@ -55,7 +58,7 @@ deletePortfolioBtn.addEventListener("click", () => {
 function loadPortfolioOptions() {
     let allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
 
-    // 1. ตั้งค่าเริ่มต้นถ้ายังไม่มีข้อมูลใน localStorage
+    // ตั้งค่าเริ่มต้นถ้ายังไม่มีข้อมูลใน localStorage
     if (Object.keys(allPortfolios).length === 0) {
         allPortfolios = {
             "Profile_1": { name: "Profile 1", items: [] },
@@ -135,6 +138,71 @@ form.addEventListener("submit", (event) => {
     renderItems();
 });
 
+// Import From textarea
+importItemBtn.addEventListener("click", () => {
+    const rawJson = importJsonInput.value.trim();
+    if (!rawJson) {
+        alert("This is empty bro... How am I gonna Import nothing.");
+        return;
+    }
+
+    let ImportData;
+    try {
+        ImportData = JSON.parse(rawJson);
+    } catch (error) {
+        alert("Wrong format or smt recheck pls");
+        return;
+    }
+
+    // ครบบ่?
+    if (!ImportData.title || !ImportData.type || !ImportData.date || !ImportData.role || !ImportData.description) {
+        alert("ข้อมูล Item ไม่ครบ");
+        return;
+    }
+
+    // จัดให้ตรง Format
+    const importedItem = {
+        id: String(ImportData.id || "item_" + Date.now()).trim(),
+        title: String(ImportData.title).trim(),
+        type: String(ImportData.type).trim(),
+        date: String(ImportData.date).trim(),
+        role: String(ImportData.role).trim(),
+        description: String(ImportData.description).trim(),
+        skills: Array.isArray(ImportData.skills)
+            ? ImportData.skills.map(s => String(s).trim()).filter(Boolean)
+            : typeof ImportData.skills === "string"
+                ? ImportData.skills.split(",").map(s => s.trim()).filter(Boolean)
+                : [],
+        reflection: {
+            whatIDid: String(ImportData.reflection?.whatIDid || "-").trim(),
+            whatILearned: String(ImportData.reflection?.whatILearned || "-").trim(),
+            challenge: String(ImportData.reflection?.challenge || "-").trim(),
+            nextStep: String(ImportData.reflection?.nextStep || "-").trim()
+        },
+        evidence: Array.isArray(ImportData.evidence) && ImportData.evidence.length > 0
+            ? ImportData.evidence.map(e => String(e).trim()).filter(Boolean)
+            : ImportData.evidence
+                ? [String(ImportData.evidence).trim()]
+                : ["#"]
+    };
+
+    const selectedPortfolio = portfolioSelect.value;
+    let allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
+    if (!allPortfolios[selectedPortfolio]) {
+        allPortfolios[selectedPortfolio] = {
+            name: portfolioSelect.options[portfolioSelect.selectedIndex]?.text || selectedPortfolio,
+            items: []
+        };
+    }
+
+    allPortfolios[selectedPortfolio].items.push(importedItem);
+    localStorage.setItem("portfoliosData", JSON.stringify(allPortfolios));
+
+    importJsonInput.value = "";
+    alert(`Import "${importedItem.title}" สำเร็จ!`);
+    renderItems();
+});
+
 // แสดงผลรายการพร้อมปุ่มลบ
 function renderItems() {
     const selectedPortfolio = portfolioSelect.value;
@@ -151,7 +219,7 @@ function renderItems() {
         itemDiv.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center;">
             <h3>[${escapeHTML(item.id)}] ${escapeHTML(item.title)} (${escapeHTML(item.type)})</h3>
-            <button type="button" class="delete-item-btn" data-index="${index}" style="color: red;">ลบรายการนี้</button>
+            <button type="button" class="delete-item-btn" data-index="${index}" style="color: red;">Delete</button>
             </div>
             <p><strong>Date:</strong> ${escapeHTML(item.date)} | <strong>Role:</strong> ${escapeHTML(item.role)}</p>
             <p><strong>Description:</strong> ${escapeHTML(item.description)}</p>
@@ -184,7 +252,7 @@ function deleteItem(index) {
     const selectedPortfolio = portfolioSelect.value;
     let allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
 
-        if (allPortfolios[selectedPortfolio] && confirm("คุณจะลบรายการผลงานนี้ใช่หรือไม่?")) {
+        if (allPortfolios[selectedPortfolio] && confirm("คุณจะลบผลงานนี้ใช่หรือไม่?")) {
             allPortfolios[selectedPortfolio].items.splice(index, 1);
             localStorage.setItem("portfoliosData", JSON.stringify(allPortfolios));
             renderItems();
