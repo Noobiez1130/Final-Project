@@ -71,3 +71,44 @@ body {
 *{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.btn-notif-card {
+    position: absolute;
+    z-index: 1050;
+    background: #1e293b;
+    color: #fff;
+    font-size: 0.8rem;
+    font-weight: 500;
+    padding: 0.35rem 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.btn-notif-card.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.btn-notif-card.is-error {
+    background: #dc3545;
+}
+
+.btn-notif-card::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #1e293b transparent transparent transparent;
+}
+
+.btn-notif-card.is-error::after {
+    border-color: #dc3545 transparent transparent transparent;
+}

@@ -218,15 +218,59 @@ function downloadJSON(data, filename) {
     URL.revokeObjectURL(url);
 }
 
-// Copy JSON ลง Clipboard
-function copyJSONToClipboard(data, successMessage) {
+
+// สร้างการ์ดแจ้งเตือนเล็กๆ ลอยขึ้นบนปุ่มที่กด
+function showButtonNotif(btnElement, message, isError = false) {
+    if (btnElement._notifEl) {
+        btnElement._notifEl.remove();
+    }
+
+    const notif = document.createElement("div");
+    notif.className = "btn-notif-card";
+    if (isError) notif.classList.add("is-error");
+    notif.innerHTML = `<i class="bi ${isError ? "bi-exclamation-circle" : "bi-check-circle-fill"}"></i> ${escapeHTML(message)}`;
+
+    document.body.appendChild(notif);
+    btnElement._notifEl = notif;
+
+    // Middle align card
+    const rect = btnElement.getBoundingClientRect();
+    const notifRect = notif.getBoundingClientRect();
+    const top = rect.top + window.scrollY - notifRect.height - 8;
+    let left = rect.left + window.scrollX + (rect.width / 2) - (notifRect.width / 2);
+
+    // No card bleeding
+    const maxLeft = window.scrollX + window.innerWidth - notifRect.width - 8;
+    left = Math.min(Math.max(8, left), maxLeft);
+
+    notif.style.top = `${Math.max(8, top)}px`;
+    notif.style.left = `${left}px`;
+
+    requestAnimationFrame(() => {
+        notif.classList.add("show");
+    });
+
+    // Fade out
+    setTimeout(() => {
+        notif.classList.remove("show");
+        setTimeout(() => {
+            notif.remove();
+            if (btnElement._notifEl === notif) {
+                btnElement._notifEl = null;
+            }
+        }, 250);
+    }, 1800);
+}
+
+// Copy JSON Clipboard
+function copyJSONToClipboard(data, btnElement, successMessage) {
     const jsonString = JSON.stringify(data, null, 2);
     navigator.clipboard.writeText(jsonString)
         .then(() => {
-            alert(successMessage);
+            showButtonNotif(btnElement, successMessage);
         })
         .catch(() => {
-            alert("Unable. Check browser clipboard");
+            showButtonNotif(btnElement, "Error : Check clipboard permission", true);
         });
 }
 
@@ -243,9 +287,12 @@ function renderItems() {
         itemDiv.style.border = "1px solid #ccc";
         itemDiv.style.padding = "10px";
         itemDiv.style.marginBottom = "10px";
+        itemDiv.style.opacity = "1";
+        itemDiv.style.transition = "opacity 0.8s ease";
+
         itemDiv.innerHTML = `
             <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-                <h3 style="margin: 0;">[${escapeHTML(item.id)}] ${escapeHTML(item.title)} (${escapeHTML(item.type)})</h3>
+                <h3 style="margin: 0;">[${escapeHTML(item.id)}] ${escapeHTML(item.title)} <a style="font-size: small">(${escapeHTML(item.type)})</a></h3>
                 <div style="display: flex; gap: 6px;">
                     <button type="button" class="copy-item-btn btn btn-outline-secondary btn-sm" data-index="${index}">Copy JSON</button>
                     <button type="button" class="export-item-btn btn btn-outline-dark btn-sm" data-index="${index}">Export .json</button>
@@ -266,16 +313,23 @@ function renderItems() {
             </details>
             <p><strong>Evidence:</strong> <a href="${escapeHTML(item.evidence[0])}" target="_blank">${escapeHTML(item.evidence[0])}</a></p>
         `;
+        
+        const deleteBtn = itemDiv.querySelector(".delete-item-btn");
+        deleteBtn.addEventListener("click", () => {
+            deleteItem(item, itemDiv);
+        });
+
         itemsContainer.appendChild(itemDiv);
     });
 
     // Copy .json เฉพาะ Item
     document.querySelectorAll(".copy-item-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
-            const itemIndex = e.target.getAttribute("data-index");
+            const clickedBtn = e.currentTarget;
+            const itemIndex = clickedBtn.getAttribute("data-index");
             const itemData = items[itemIndex];
             if (itemData) {
-                copyJSONToClipboard(itemData, `คัดลอก "${itemData.title}".json เรียบร้อย!`);
+                copyJSONToClipboard(itemData, clickedBtn, "Copied JSON!");
             }
         });
     });
@@ -283,38 +337,51 @@ function renderItems() {
     // Export .json เฉพาะ Item
     document.querySelectorAll(".export-item-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
-            const itemIndex = e.target.getAttribute("data-index");
+            const clickedBtn = e.currentTarget;
+            const itemIndex = clickedBtn.getAttribute("data-index");
             const itemData = items[itemIndex];
             if (itemData) {
                 const safeFilename = `${itemData.id || "portfolio-item"}.json`;
                 downloadJSON(itemData, safeFilename);
+                showButtonNotif(clickedBtn, `Exported ${safeFilename}`);
             }
         });
     });
 
-    // Delete Item button
-    document.querySelectorAll(".delete-item-btn").forEach(btn => {
-        btn.addEventListener("click", (e) => {
-            const itemIndex = e.target.getAttribute("data-index");
-            deleteItem(itemIndex);
-        });
-    });
 }
 
-// ฟังก์ชันลบเฉพาะ Item
-function deleteItem(index) {
-    const selectedPortfolio = portfolioSelect.value;
-    let allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
+    // ฟังก์ชันลบเฉพาะ Item
+    function deleteItem(targetItem, itemDiv) {
+        const selectedPortfolio = portfolioSelect.value;
+        let allPortfolios = JSON.parse(localStorage.getItem("portfoliosData")) || {};
 
-        if (allPortfolios[selectedPortfolio] && confirm("คุณจะลบงานนี้ใช่หรือไม่?")) {
-            allPortfolios[selectedPortfolio].items.splice(index, 1);
-            localStorage.setItem("portfoliosData", JSON.stringify(allPortfolios));
-            renderItems();
+        if (allPortfolios[selectedPortfolio]) {
+            const currentItems = allPortfolios[selectedPortfolio].items;
+            const actualIndex = currentItems.findIndex(
+                i => i.id === targetItem.id && i.title === targetItem.title && i.date === targetItem.date
+            );
+
+            if (actualIndex !== -1) {
+                currentItems.splice(actualIndex, 1);
+                localStorage.setItem("portfoliosData", JSON.stringify(allPortfolios));
+            }
+
+            // ข้อความ "Deleted"
+            itemDiv.innerHTML = `<p style="margin: 0; padding: 12px 0; text-align: center; color: #dc3545; font-weight: 600;">Deleted!</p>`;
+            
+            requestAnimationFrame(() => {
+                itemDiv.style.opacity = "0";
+            });
+
+            // ลบกล่องหลังจากจางหายสนิท
+            setTimeout(() => {
+                itemDiv.remove();
+                if (itemsContainer.children.length === 0) {
+                    itemsContainer.innerHTML = "<p>ยังไม่มีรายการ Portfolio Item</p>";
+                }
+            }, 800);
         }
     }
 
-    // กันการโจมตี XSS Attack (ถาม AI เรื่องความปลอดภัยมา)
-    function escapeHTML(str) {
-        return str ? str.replace(/[&<>'"]/g, tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)) : "";
-    }
+    
 });
