@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const deletePortfolioBtn = document.querySelector("#delete-portfolio-btn");
     const importJsonInput = document.querySelector("#import-item-json");
     const importItemBtn = document.querySelector("#import-item-btn");
+    const importFileInput = document.querySelector("#import-item-file");
 
     // โหลดรายชื่อมาใส่ใน <select>
     loadPortfolioOptions();
@@ -144,14 +145,28 @@ document.addEventListener("DOMContentLoaded", () => {
         renderItems();
     });
 
-    // Import From textarea
+    // Import From file or textarea
     importItemBtn.addEventListener("click", () => {
+        const file = importFileInput.files[0];
         const rawJson = importJsonInput.value.trim();
-        if (!rawJson) {
-            showButtonNotif(importItemBtn, "Too empty", true);
-            return;
-        }
 
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                processAndImportJSON(e.target.result);
+            };
+            reader.onerror = () => {
+                showButtonNotif(importItemBtn, "Cannot read file", true);
+            };
+            reader.readAsText(file);
+        } else if (rawJson) {
+            processAndImportJSON(rawJson);
+        } else {
+            showButtonNotif(importItemBtn, "Too empty", true);
+        }
+    });
+
+    function processAndImportJSON(rawJson) {
         let ImportData;
         try {
             ImportData = JSON.parse(rawJson);
@@ -203,9 +218,10 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.setItem("portfoliosData", JSON.stringify(allPortfolios));
 
         importJsonInput.value = "";
+        importFileInput.value = "";
         showButtonNotif(importItemBtn, `Import "${importedItem.title}" สำเร็จ!`);
         renderItems();
-    });
+    }
 
     // Download .json
     function downloadJSON(data, filename) {
