@@ -1,8 +1,0 @@
-{
-  "challengeId": "CHL-002",
-  "title": "DOM & LocalStorage Form Validation",
-  "difficulty": "Hard",
-  "instructions": "เขียนฟังก์ชัน JavaScript ดักจับการกด Submit ฟอร์ม โดยต้องตัดช่องว่างด้วย .trim() ห้ามส่งค่าว่าง และบันทึกข้อมูลลงใน localStorage รูปแบบ JSON",
-  "evidencePrompt": "แนบลิงก์ GitHub Repository และภาพแคปหน้าจอหน้า Application > Local Storage ใน DevTools",
-  "skillsRequired": ["HTML", "JavaScript", "DOM", "LocalStorage"]
-}

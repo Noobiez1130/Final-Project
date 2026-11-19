@@ -1,8 +1,0 @@
-{
-    "challengeId": "CHL-001",
-    "title": "Responsive Navbar Challenge",
-    "difficulty": "Medium",
-    "instructions": "สร้างแถบเมนูนำทาง (Navigation Bar) ด้วย Bootstrap 5 ที่สามารถย่อเป็น Hamburger Menu ได้เมื่อเปิดบนหน้าจอมือถือ",
-    "evidencePrompt": "แนบลิงก์ GitHub และภาพแคปหน้าจอขณะที่ Navbar หดตัวเป็นเมนูแฮมเบอร์เกอร์",
-    "skillsRequired": ["HTML", "CSS", "Bootstrap 5"]
-}
