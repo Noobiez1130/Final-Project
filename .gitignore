@@ -1,0 +1,16 @@
+# Environment & Secrets / Credentials / Keys
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.crt
+*.p12
+
+# Runtime JSON data (กันไฟล์ข้อมูลจริง แต่เก็บไฟล์ตัวอย่างไว้ได้)
+data/*.json
+!data/sample-*.json
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
