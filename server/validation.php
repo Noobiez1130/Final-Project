@@ -99,3 +99,71 @@ function validatePortfolioItem($data) {
         'errors' => $errors
     ];
 }
+
+function decodeJsonPayload($rawJson) {
+    if (!is_string($rawJson) || trim($rawJson) === '') {
+        return [
+            'ok' => false,
+            'error' => 'ไม่พบข้อมูล JSON ที่ส่งมา',
+            'data' => null
+        ];
+    }
+
+    $decoded = json_decode($rawJson, true);
+    if (json_last_error() !== JSON_ERROR_NONE || !is_array($decoded)) {
+        return [
+            'ok' => false,
+            'error' => 'รูปแบบ JSON ไม่ถูกต้อง: ' . json_last_error_msg(),
+            'data' => null
+        ];
+    }
+
+    return [
+        'ok' => true,
+        'error' => null,
+        'data' => $decoded
+    ];
+}
+
+function validatePortfoliosStructure($data) {
+    if (!is_array($data)) {
+        return [
+            'valid' => false,
+            'errors' => ['โครงสร้างไฟล์ JSON ต้องเป็น Object']
+        ];
+    }
+
+    $errors = [];
+    foreach ($data as $portfolioId => $portfolio) {
+        if (!isValidText((string)$portfolioId, 120)) {
+            $errors[] = 'พบรหัส Portfolio ที่ไม่ถูกต้อง';
+            continue;
+        }
+        if (!is_array($portfolio)) {
+            $errors[] = "ข้อมูลของ Portfolio '{$portfolioId}' ต้องเป็น Object";
+            continue;
+        }
+        if (!isValidText($portfolio['name'] ?? null, 150)) {
+            $errors[] = "Portfolio '{$portfolioId}' ขาด name หรือ name ว่างเปล่า";
+        }
+        if (!isset($portfolio['items']) || !is_array($portfolio['items'])) {
+            $errors[] = "Portfolio '{$portfolioId}' ต้องมี items เป็น Array";
+        }
+    }
+
+    return [
+        'valid' => count($errors) === 0,
+        'errors' => $errors
+    ];
+}
+
+function sendJsonError($statusCode, $message, $details = []) {
+    http_response_code($statusCode);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode([
+        'success' => false,
+        'error' => $message,
+        'details' => $details
+    ], JSON_UNESCAPED_UNICODE);
+    exit;
+}

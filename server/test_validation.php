@@ -42,3 +42,12 @@ var_dump(validatePortfolioItem($validItem));
 
 echo "\n=== Test 2: Invalid Item ===\n";
 var_dump(validatePortfolioItem($invalidItem));
+
+echo "\n=== Test 3: Sample Portfolio Structure ===\n";
+$samplePath = __DIR__ . '/../sample-portfolio-1.json';
+if (file_exists($samplePath)) {
+    $decodedSample = decodeJsonPayload(file_get_contents($samplePath));
+    var_dump($decodedSample['ok'], validatePortfoliosStructure($decodedSample['data']));
+} else {
+    echo "ไม่พบ sample-portfolio-1.json\n";
+}
