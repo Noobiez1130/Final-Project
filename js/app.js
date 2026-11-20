@@ -338,12 +338,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             itemDiv.querySelector(".copy-item-btn").addEventListener("click", (e) => {
-                copyJSONToClipboard(item, e.currentTarget, "Copied JSON!");
+                copyJSONToClipboard(getItemJsonData(item), e.currentTarget, "Copied JSON!");
             });
 
             itemDiv.querySelector(".export-item-btn").addEventListener("click", (e) => {
                 const safeFilename = `${item.id || "portfolio-item"}.json`;
-                downloadJSON(item, safeFilename);
+                downloadJSON(getItemJsonData(item), safeFilename);
                 showButtonNotif(e.currentTarget, `Exported ${safeFilename}`);
             });
 
@@ -397,6 +397,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function safeHttpUrl(url) {
         const trimmed = String(url ?? "").trim();
         return /^https?:\/\//i.test(trimmed) ? trimmed : "";
+    }
+
+    function getItemJsonData(item) {
+        const jsonData = { ...item };
+        delete jsonData.name;
+        delete jsonData.items;
+        return jsonData;
     }
 
     function downloadJSON(data, filename) {

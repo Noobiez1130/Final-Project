@@ -1,4 +1,4 @@
-# Project-Checkpoint
+# Final-Project
 
 เว็บแอปสำหรับรวบรวมผลงานและการเรียนรู้ของตัวเองไว้ในที่เดียว 
  - สร้าง Profile, 
@@ -16,13 +16,15 @@
 
 3.แสดงรายการผลงานทั้งหมดใน Portfolio Items List
 
+4.Import Export ข้อมูลได้อย่างอิสระ
 
 
----------วิธีเปิดและทดลองเว็บไซต์;
+
+---------วิธีใช้งาน;
 
 1.เปิดเบราว์เซอร์ (Chrome, Edge, Firefox หรือ Safari) บนคอมพิวเตอร์หรือมือถือ
 
-2.เข้าลิงก์ [https://noobiez1130.github.io/Project-Checkpoint/](https://github.com/Noobiez1130/Final-Project)
+2.เข้าลิงก์ [โดยคลิกที่นี่](http://100.30.170.249)
 
 3.ทดลองใช้งานตามลำดับนี้:
  - กด Add Profile เพื่อสร้าง Profile ของตัวเอง แล้วเลือกจากช่อง Profile
@@ -35,20 +37,12 @@
     Skills: HTML, CSS, JavaScript
     Reflection และ Evidence URL ตามต้องการ
 
+  หรือ Import จากข้อความ JSON หรือไฟล์ .json ที่มีอยู่ด้านล่าง
+
 4.กด Save Item
 
-5.ดูผลงานที่เพิ่มในส่วน Portfolio Items List
+5.ดูผลงานที่เพิ่มในส่วน Portfolio Items List และ Export ผ่านปุ่มที่อยู่ด้านข้าง
 
-6.ทดลองลบด้วย Delete this Profile (เลือก Profile ที่ต้องการลบก่อน)
+6.ถ้าหากอยากลบ Profile สามารถกดปุ่มลบสีแดงที่อยู่ข้างๆได้เลย
 
-
-
----------วิธีใช้งาน;
-
-1.เลือก/สร้าง Profile — กด Add Profile เพื่อเพิ่มใหม่ หรือ Delete this Profile เพื่อลบอันที่เลือก
-
-2.กรอกฟอร์ม Add Portfolio Item — ใส่ข้อมูลผลงานและ Reflection ให้ครบ
-
-3.กด Save Item เพื่อบันทึก
-
-4.ดูผลงานทั้งหมดได้ที่ส่วน Portfolio Items List
+=====================================================================================
