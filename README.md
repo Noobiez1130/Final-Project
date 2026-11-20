@@ -1,4 +1,4 @@
-# Project-Checkpoint
+# Final-Project
 
 เว็บแอปสำหรับรวบรวมผลงานและการเรียนรู้ของตัวเองไว้ในที่เดียว 
  - สร้าง Profile, 
@@ -15,6 +15,8 @@
  - Evidence URL (ลิงก์หลักฐานผลงาน)
 
 3.แสดงรายการผลงานทั้งหมดใน Portfolio Items List
+
+4.Import Export ข้อมูลได้อย่างอิสระ
 
 
 
