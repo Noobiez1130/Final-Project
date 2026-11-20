@@ -1,13 +1,12 @@
 .certificate-overlay,
 .certificate {
-    --cert-primary: #5b7f6a;      
-    --cert-accent: #b8923a;      
-    --cert-paper: #fffdf8;        
-    --cert-text: #2f3a33;         
-    --cert-muted: #6b756e;        
+    --cert-primary: #5b7f6a;      /* สีเขียวหลัก (ตรงกับธีมเว็บ) */
+    --cert-accent: #b8923a;       /* สีทองของกรอบและตราประทับ */
+    --cert-paper: #fffdf8;        /* สีพื้นกระดาษ */
+    --cert-text: #2f3a33;         /* สีตัวอักษรหลัก */
+    --cert-muted: #6b756e;        /* สีป้ายกำกับ */
     --cert-font: 'IBM Plex Sans Thai', 'Segoe UI', Tahoma, sans-serif;
 }
-
 
 .certificate-overlay {
     position: fixed;
@@ -37,7 +36,6 @@ body.certificate-open {
     overflow: hidden;
 }
 
-/* ---------- ตัวใบเกียรติบัตร ---------- */
 .certificate {
     container-type: inline-size;
     width: 100%;

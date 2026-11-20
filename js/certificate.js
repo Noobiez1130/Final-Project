@@ -1,15 +1,3 @@
-/**
- * ใบเกียรติบัตร (Certificate) — แยกไฟล์ไว้แก้ไขภายหลัง
- *
- * วิธีแก้ไข:
- *   - ข้อความ / ชื่อผู้ออก / ลายเซ็น   -> แก้ใน CERT_CONFIG ด้านล่าง
- *   - สี / ฟอนต์ / ขนาด / กรอบ        -> แก้ใน css/certificate.css
- *   - โครงสร้าง HTML ของใบ            -> แก้ฟังก์ชัน buildCertificateHTML()
- *
- * ใช้งานจาก app.js:
- *   Certificate.open(item, profileName)   // เปิดใบเกียรติบัตรแบบ popup (มีปุ่มพิมพ์ / บันทึก PDF)
- *   Certificate.close()
- */
 const Certificate = (() => {
 
     // ===================== ตั้งค่าที่แก้ได้ =====================
@@ -33,7 +21,6 @@ const Certificate = (() => {
 
         locale: "th-TH"
     };
-    // ==========================================================
 
     const OVERLAY_ID = "certificate-overlay";
 
@@ -56,8 +43,6 @@ const Certificate = (() => {
         const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
         return escapeHtml(d.toLocaleDateString(CERT_CONFIG.locale, { year: "numeric", month: "long", day: "numeric" }));
     }
-
-
 
     function fillBody(template, item) {
         const values = { title: item.title, type: item.type, role: item.role };

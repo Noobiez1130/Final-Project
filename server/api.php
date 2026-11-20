@@ -1,4 +1,8 @@
 <?php
+// api.php = ตัวกลางระหว่างหน้าเว็บ (JavaScript) กับไฟล์ข้อมูล JSON
+//   GET  = ขอดูข้อมูลทั้งหมด
+//   POST = เพิ่ม / ลบข้อมูล (หน้าเว็บส่ง "action" มาบอกว่าจะทำอะไร)
+
 require_once __DIR__ . '/validation.php';  // ฟังก์ชันตรวจข้อมูล และ sendJsonError() ที่ใช้ส่ง error
 require_once __DIR__ . '/storage.php';     // ฟังก์ชันอ่าน/เขียนไฟล์ JSON
 
@@ -9,7 +13,7 @@ function sendJson($data) {
     exit;
 }
 
-// ---------- อ่านข้อมูลทั้งหมดจากไฟล์ ----------
+// ---------- 1) อ่านข้อมูลทั้งหมดจากไฟล์ ----------
 $portfolios = loadPortfoliosFromFile();
 
 // ถ้ายังไม่มี Profile เลย ให้สร้างให้ 2 อัน
@@ -19,12 +23,12 @@ if (count($portfolios) == 0) {
     savePortfoliosToFile($portfolios);
 }
 
-// ---------- GET: ส่งข้อมูลทั้งหมดกลับไป ----------
+// ---------- 2) GET: ส่งข้อมูลทั้งหมดกลับไป ----------
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     sendJson(['success' => true, 'portfolios' => $portfolios]);
 }
 
-// ---------- POST: รับ JSON จากหน้าเว็บ ----------
+// ---------- 3) POST: รับ JSON จากหน้าเว็บ ----------
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     sendJsonError(405, 'รองรับแค่ GET และ POST');
 }
@@ -76,6 +80,12 @@ if ($action == 'addProfile') {
             sendJsonError(409, 'ID นี้มีอยู่แล้วใน Profile นี้ กรุณาใช้ ID อื่น');
         }
     }
+
+    // เลขที่ใบเกียรติบัตร (หน้าตาใบเกียรติบัตรแก้ที่ js/certificate.js และ css/certificate.css)
+    $item['certificate'] = [
+        'no' => 'CERT-' . date('Ymd') . '-' . strtoupper(substr(uniqid(), -6)),
+        'issuedAt' => date('c')
+    ];
 
     $portfolios[$portfolioId]['items'][] = $item;   // [] = ต่อท้ายรายการ
     $reply['item'] = $item;

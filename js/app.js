@@ -16,9 +16,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const serverAlertText = document.querySelector("#server-alert-text");
     const serverRetryBtn = document.querySelector("#server-retry-btn");
 
+    // ข้อมูลล่าสุดที่ได้จาก Server (เก็บในหน่วยความจำเท่านั้น ไม่เขียนลง localStorage)
     let portfolios = {};
 
     loadFromServer();
+
+    // =====================================================
+    // Data flow: Client <-> Server
+    // =====================================================
 
     async function apiRequest(payload) {
         let response;
@@ -158,8 +163,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     portfolioSelect.addEventListener("change", renderItems);
 
-    
+    // =====================================================
     // บันทึก Item (ใช้ร่วมกันทั้งฟอร์มปกติ / Import)
+    // =====================================================
 
     // ส่ง Item ไปให้ Server ตรวจและบันทึก เมื่อสำเร็จจะเปิดใบเกียรติบัตรให้ทันที
     async function saveItemToServer(item, btn, successMessage) {
@@ -205,7 +211,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-
+    // =====================================================
+    // Import
+    // =====================================================
 
     importItemBtn.addEventListener("click", () => {
         const file = importFileInput.files[0];
