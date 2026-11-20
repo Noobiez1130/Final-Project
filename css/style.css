@@ -5,10 +5,21 @@ body {
     background: #faf8f4; 
 }
 
+
 .hero {
-    background: linear-gradient(135deg, #5b7f6a, #a3b18a);
+    padding: 2rem;
+    background: linear-gradient(135deg, #44362F, #635147);
     color: #faf8f4;
-} 
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 900;
+}
+
+.hero p {
+    font-size: 1.25rem;
+}
 
 
 .delete-item-btn {
@@ -38,13 +49,13 @@ body {
 }
 
 .btn-brand {
-    background: #5b7f6a;
+    background: #635147;
     color: #fff;
     border: 0;
 }
 
 .btn-brand:hover {
-    background: #a3b18a;
+    background: #D2B48C;
     color: #fff;
 }
 
@@ -68,8 +79,18 @@ body {
     color: #6c757d;
 }
 
+.btn-save {
+    background: #635147;
+    color: #fff;
+}
+
+.btn-save:hover {
+    background: #D2B48C;
+    color: #fff;
+}
+
 *{
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: serif;
 }
 
 .btn-notif-card {
