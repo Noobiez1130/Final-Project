@@ -1,0 +1,248 @@
+.certificate-overlay,
+.certificate {
+    --cert-primary: #5b7f6a;      
+    --cert-accent: #b8923a;      
+    --cert-paper: #fffdf8;        
+    --cert-text: #2f3a33;         
+    --cert-muted: #6b756e;        
+    --cert-font: 'IBM Plex Sans Thai', 'Segoe UI', Tahoma, sans-serif;
+}
+
+
+.certificate-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(20, 28, 24, .72);
+    overflow: auto;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 1.25rem;
+}
+
+.certificate-dialog {
+    width: min(100%, 980px);
+    margin: auto;
+}
+
+.certificate-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    gap: .5rem;
+    margin-bottom: .75rem;
+}
+
+body.certificate-open {
+    overflow: hidden;
+}
+
+/* ---------- ตัวใบเกียรติบัตร ---------- */
+.certificate {
+    container-type: inline-size;
+    width: 100%;
+    aspect-ratio: 297 / 210;
+    background: var(--cert-paper);
+    color: var(--cert-text);
+    padding: 2.2cqw;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, .35);
+}
+
+.certificate,
+.certificate * {
+    font-family: var(--cert-font);
+}
+
+.certificate-frame {
+    position: relative;
+    height: 100%;
+    border: .5cqw solid var(--cert-primary);
+    outline: .15cqw solid var(--cert-accent);
+    outline-offset: -1.4cqw;
+    padding: 2.6cqw 5cqw 1.8cqw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.certificate-corner {
+    position: absolute;
+    width: 4cqw;
+    height: 4cqw;
+    border-color: var(--cert-accent);
+    border-width: 0;
+}
+.certificate-corner.tl { top: 2cqw; left: 2cqw; border-top-width: .4cqw; border-left-width: .4cqw; }
+.certificate-corner.tr { top: 2cqw; right: 2cqw; border-top-width: .4cqw; border-right-width: .4cqw; }
+.certificate-corner.bl { bottom: 2cqw; left: 2cqw; border-bottom-width: .4cqw; border-left-width: .4cqw; }
+.certificate-corner.br { bottom: 2cqw; right: 2cqw; border-bottom-width: .4cqw; border-right-width: .4cqw; }
+
+.certificate-issuer {
+    font-size: 1.5cqw;
+    letter-spacing: .25cqw;
+    text-transform: uppercase;
+    color: var(--cert-muted);
+}
+
+.certificate-heading {
+    margin: .6cqw 0 0;
+    font-size: 5.4cqw;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--cert-primary);
+}
+
+.certificate-subheading {
+    font-size: 1.9cqw;
+    letter-spacing: .35cqw;
+    color: var(--cert-accent);
+    font-weight: 500;
+}
+
+.certificate-presented {
+    margin-top: 2.2cqw;
+    font-size: 1.7cqw;
+    color: var(--cert-muted);
+}
+
+.certificate-name {
+    margin-top: .6cqw;
+    padding: 0 3cqw .5cqw;
+    min-width: 45%;
+    max-width: 100%;
+    font-size: 4cqw;
+    font-weight: 600;
+    line-height: 1.3;
+    border-bottom: .2cqw solid var(--cert-accent);
+    overflow-wrap: anywhere;
+}
+
+.certificate-body {
+    margin: 1.4cqw 0 0;
+    max-width: 78cqw;
+    font-size: 1.8cqw;
+    line-height: 1.6;
+}
+
+.certificate-skills,
+.certificate-evidence {
+    margin-top: 1.1cqw;
+    font-size: 1.5cqw;
+    max-width: 80cqw;
+    overflow-wrap: anywhere;
+}
+
+.certificate-label {
+    color: var(--cert-muted);
+    margin-right: .5cqw;
+}
+
+.certificate-chip {
+    display: inline-block;
+    margin: .2cqw .25cqw;
+    padding: .1cqw 1cqw;
+    border: .12cqw solid var(--cert-primary);
+    border-radius: 2cqw;
+    color: var(--cert-primary);
+    font-size: 1.4cqw;
+}
+
+.certificate-footer-row {
+    margin-top: auto;
+    width: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 2cqw;
+}
+
+.certificate-meta,
+.certificate-signature {
+    flex: 1 1 0;
+    font-size: 1.4cqw;
+}
+
+.certificate-meta {
+    text-align: left;
+    line-height: 1.7;
+}
+
+.certificate-signature {
+    text-align: center;
+}
+
+.certificate-signature-line {
+    margin: 0 4cqw .4cqw;
+}
+
+.certificate-signer {
+    font-weight: 600;
+}
+
+.certificate-signer-title {
+    color: var(--cert-muted);
+    font-size: 1.2cqw;
+}
+
+.certificate-seal {
+    flex: 0 0 auto;
+    width: 8cqw;
+    height: 8cqw;
+    border-radius: 50%;
+    background: var(--cert-accent);
+    box-shadow: inset 0 0 0 .4cqw var(--cert-paper), inset 0 0 0 .6cqw var(--cert-accent);
+    color: var(--cert-paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4cqw;
+}
+
+.certificate-footnote {
+    margin-top: 1cqw;
+    font-size: 1.1cqw;
+    color: var(--cert-muted);
+}
+
+/* ---------- พิมพ์ / บันทึกเป็น PDF ---------- */
+@media print {
+    @page {
+        size: A4 landscape;
+        margin: 0;
+    }
+
+    body > *:not(.certificate-overlay) {
+        display: none !important;
+    }
+
+    body.certificate-open {
+        overflow: visible;
+        background: #fff;
+    }
+
+    .certificate-overlay {
+        position: static;
+        background: none;
+        padding: 0;
+        overflow: visible;
+        display: block;
+    }
+
+    .certificate-dialog {
+        width: 100%;
+        margin: 0;
+    }
+
+    .certificate-toolbar {
+        display: none !important;
+    }
+
+    .certificate {
+        width: 297mm;
+        height: 210mm;
+        box-shadow: none;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+}
